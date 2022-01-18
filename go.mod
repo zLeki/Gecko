@@ -1,4 +1,4 @@
-module github.com/zLeki/Gecko
+module gecko
 
 go 1.18
 

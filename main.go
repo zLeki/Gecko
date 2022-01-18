@@ -263,7 +263,6 @@ func menu() {
 		input.Scan()
 		guildid := input.Text()
 		Pullids(guildid)
-		time.Sleep(900 * time.Second)
 	} else if input.Text() == "2" {
 		settings()
 	}

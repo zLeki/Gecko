@@ -208,6 +208,10 @@ func Pullids(guildid string) {
 	if err != nil {
 		return
 	}
+	if resp1.StatusCode != http.StatusOK {
+		errData, _ := ioutil.ReadAll(resp1.Body)
+		log.Fatalf("Error sending request: %v", errData)
+	}
 	for _, v := range data1 {
 
 		req, _ := http.NewRequest("GET", "https://discord.com/api/v9/channels/"+v.ID+"/messages?limit=100", nil)

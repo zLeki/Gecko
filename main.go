@@ -10,7 +10,6 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"math"
 	"math/rand"
 	"net/http"
 	"os"
@@ -92,13 +91,12 @@ func MassDM(ids []string) {
 			log.Fatalf("Error decoding channel info: %v", err)
 		}
 		rand.Seed(time.Now().UnixNano())
-		min := math.MaxInt64
-		max := math.MaxInt64
-
+		min := 30
+		max := 90
 		var body2 = []byte(`
 		{
     "content": "` + settings.Message + `",
-    "nonce": "` + strconv.Itoa(rand.Intn(max-min+1)+min) + `",
+    "nonce": "23282321949104537` + strconv.Itoa(rand.Intn(max-min+1)+min) + `",
     "tts": false
 }
 `)

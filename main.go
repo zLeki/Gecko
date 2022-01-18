@@ -10,6 +10,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"math"
 	"math/rand"
 	"net/http"
 	"os"
@@ -46,6 +47,15 @@ func clear() {
 		fmt.Print("\n")
 	}
 }
+
+type Settings struct {
+	Token       string `json:"token"`
+	Guild       string `json:"guild"`
+	Threads     int    `json:"threads"`
+	Whitelisted string `json:"whitelisted"`
+	Message     string `json:"message"`
+}
+
 func MassDM(ids []string) {
 	type ChannelInfo struct {
 		ID            string      `json:"id"`
@@ -60,6 +70,13 @@ func MassDM(ids []string) {
 			Bot           bool   `json:"bot"`
 		} `json:"recipients"`
 	}
+	f, _ := ioutil.ReadFile("settings.json")
+	var settings Settings
+	err := json.Unmarshal(f, &settings)
+	if err != nil {
+		log.Fatalf("Error opening settings", err)
+	}
+	token := settings.Token
 	for _, v := range ids {
 		log.Println(v)
 		var body = []byte(`
@@ -75,12 +92,12 @@ func MassDM(ids []string) {
 			log.Fatalf("Error decoding channel info: %v", err)
 		}
 		rand.Seed(time.Now().UnixNano())
-		min := 2328232194910453738
-		max := 9328232194910493738
+		min := math.MaxInt64
+		max := math.MaxInt64
 
 		var body2 = []byte(`
 		{
-    "content": "IM GAY",
+    "content": "` + settings.Message + `",
     "nonce": "` + strconv.Itoa(rand.Intn(max-min+1)+min) + `",
     "tts": false
 }
@@ -96,13 +113,23 @@ func MassDM(ids []string) {
 }
 func Pullids(guildid string) {
 	var b = 0
+	f, _ := ioutil.ReadFile("settings.json")
+	var settings Settings
+	err := json.Unmarshal(f, &settings)
+	if err != nil {
+		log.Fatalf("Error opening settings", err)
+	}
+	token := settings.Token
 	var ids = []string{}
 	req1, _ := http.NewRequest("GET", "https://discord.com/api/guilds/"+guildid+"/channels", nil)
 	req1.Header.Set("content-type", "application/json")
 	req1.Header.Set("Authorization", token)
 	resp1, _ := client.Do(req1)
 	var data1 structs.GuidldChannelData
-	json.NewDecoder(resp1.Body).Decode(&data1)
+	err = json.NewDecoder(resp1.Body).Decode(&data1)
+	if err != nil {
+		return
+	}
 	for _, v := range data1 {
 
 		req, _ := http.NewRequest("GET", "https://discord.com/api/v9/channels/"+v.ID+"/messages?limit=100", nil)
@@ -153,7 +180,11 @@ func menu() {
 	input.Scan()
 	if input.Text() == "1" {
 		title()
-		color.Green(`Send "ratio" in the server you want to dm everyone in (Use the whitelisted discord account)`)
+		color.Yellow("[i] Guild ID: >>> ") // would use a sql database but i dont want a monkey with my oracle online login
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		guildid := input.Text()
+		Pullids(guildid)
 		time.Sleep(900 * time.Second)
 	} else if input.Text() == "2" {
 		settings()
@@ -166,7 +197,7 @@ func login() {
 			Password string `json:"password"`
 		} `json:"users"`
 	}
-
+	title()
 	color.Yellow("[i] Email address: >>> ") // would use a sql database but i dont want a monkey with my oracle online login
 	input := bufio.NewScanner(os.Stdin)
 	input.Scan()
@@ -175,9 +206,9 @@ func login() {
 	input2 := bufio.NewScanner(os.Stdin)
 	input2.Scan()
 	password := input2.Text()
-	jsonFile, _ := ioutil.ReadFile("users.json")
+	req, _ := http.Get("https://www.toptal.com/developers/hastebin/raw/uyojuzulir")
 	var data jsonData
-	err := json.Unmarshal(jsonFile, &data)
+	err := json.NewDecoder(req.Body).Decode(&data)
 	if err != nil {
 		log.Fatalf("Error occured while decoding json: %v", err)
 	}
@@ -197,10 +228,6 @@ func login() {
 	os.Exit(0)
 }
 func main() {
-	Pullids("853075435523801098")
+	login()
 
 }
-
-var (
-	token = "Njg4OTAwMDAxNTMxMDM1NjUw.YeYksA.s8X36bVGwCuNKN4OkKIIjqdlG0g"
-)

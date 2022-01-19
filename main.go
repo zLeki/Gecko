@@ -308,6 +308,6 @@ func login() {
 	os.Exit(0)
 }
 func main() {
-	login()
+	menu()
 
 }

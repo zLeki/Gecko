@@ -267,7 +267,9 @@ func menu() {
 		guildid := input.Text()
 		Pullids(guildid)
 	} else if input.Text() == "2" {
-		settings()
+		log.Println("Unavailable option at the time.")
+		time.Sleep(time.Second*3)
+		os.Exit(0)
 	}
 }
 func main() {

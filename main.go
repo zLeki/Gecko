@@ -270,43 +270,6 @@ func menu() {
 		settings()
 	}
 }
-func login() {
-	type jsonData struct {
-		Users []struct {
-			Email    string `json:"email"`
-			Password string `json:"password"`
-		} `json:"users"`
-	}
-	title()
-	color.Yellow("[i] Email address: >>> ") // would use a sql database but i dont want a monkey with my oracle online login
-	input := bufio.NewScanner(os.Stdin)
-	input.Scan()
-	email := input.Text()
-	color.Yellow("[i] Password: >>> ")
-	input2 := bufio.NewScanner(os.Stdin)
-	input2.Scan()
-	password := input2.Text()
-	req, _ := http.Get("https://www.toptal.com/developers/hastebin/raw/uyojuzulir")
-	var data jsonData
-	err := json.NewDecoder(req.Body).Decode(&data)
-	if err != nil {
-		log.Fatalf("Error occured while decoding json: %v", err)
-	}
-	for _, v := range data.Users {
-		if v.Email == email {
-			if v.Password == password {
-				title()
-				color.Green("[V] Welcome back, %v", v.Email)
-				time.Sleep(2 * time.Second)
-				menu()
-				return
-			}
-		}
-	}
-	log.Println("Unknown email or password")
-	time.Sleep(3 * time.Second)
-	os.Exit(0)
-}
 func main() {
 	menu()
 

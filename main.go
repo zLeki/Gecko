@@ -223,7 +223,8 @@ func Pullids(guildid string) {
 			defer func(Body io.ReadCloser) {
 				err := Body.Close()
 				if err != nil {
-
+					log.Println("Error occured, err")
+					os.Exit(0)
 				}
 			}(resp.Body)
 			var data ChannelData

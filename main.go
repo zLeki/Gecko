@@ -156,7 +156,6 @@ func MassDM(ids []string) {
 	}
 	token := settings.Token
 	for _, v := range ids {
-		log.Println(v)
 		var body = []byte(`
 {"recipients":["` + v + `"]}
 `)
@@ -167,7 +166,8 @@ func MassDM(ids []string) {
 		var data ChannelInfo
 		err := json.NewDecoder(resp.Body).Decode(&data)
 		if err != nil {
-			log.Fatalf("Error decoding channel info: %v", err)
+			log.Println("Error decoding channel info: %v", err)
+			os.Exit(0)
 		}
 		rand.Seed(time.Now().UnixNano())
 		min := 30
@@ -194,7 +194,8 @@ func Pullids(guildid string) {
 	var settings Settings
 	err := json.Unmarshal(f, &settings)
 	if err != nil {
-		log.Fatalf("Error opening settings", err)
+		log.Println("Error opening settings", err)
+		os.Exit(0)
 	}
 	token := settings.Token
 	var ids = []string{}
@@ -228,7 +229,8 @@ func Pullids(guildid string) {
 			var data ChannelData
 			err := json.NewDecoder(resp.Body).Decode(&data)
 			if err != nil {
-				log.Fatalf("Error decoding JSON: %v", err)
+				log.Println("Error decoding JSON: %v", err)
+				os.Exit(0)
 			}
 
 			for _, v := range data {
@@ -250,9 +252,6 @@ func contains(elems []string, v string) bool {
 		}
 	}
 	return false
-}
-func settings() {
-
 }
 func menu() {
 	title()

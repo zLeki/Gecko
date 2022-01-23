@@ -224,14 +224,14 @@ func Pullids(guildid string) {
 				err := Body.Close()
 				if err != nil {
 					log.Println("Error occured, err")
-					os.Exit(0)
+					return
 				}
 			}(resp.Body)
 			var data ChannelData
 			err := json.NewDecoder(resp.Body).Decode(&data)
 			if err != nil {
 				log.Println("Error decoding JSON: %v", err)
-				os.Exit(0)
+				return
 			}
 
 			for _, v := range data {

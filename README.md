@@ -4,7 +4,7 @@
 
 
 <!-- ![Visitors](https://estruyf-github.azurewebsites.net/api/VisitorHit?user=wst24365888&repo=ez4o/convert-json-cli&countColor=rgb(0,%20126,%20198)) -->
-
+<h5>THIS IS UNTESTED RESULTS MAY VARY ACCOUNT TERMINATION IS AT RISK I AM NOT RESPONSIBLE FOR ANY DAMAGES</h5>
 <br />
 
 ![Gecko](https://i.imgur.com/ycWnfbA.png)
